@@ -62,7 +62,8 @@ button{font:inherit;cursor:pointer;border:0}.topbar{position:sticky;top:0;z-inde
 <div class="qrbox">
 <h3>📱 QR de mi Saludia360</h3>
 <p>Escanea este código para abrir Saludia360 desde tu celular.</p>
-<div id="qrcode"></div>
+<div id="qrcode">
+</div>
 <div class="qr-actions">
 <button class="primary" type="button" onclick="descargarQR()">⬇️ Guardar QR</button>
 <button class="secondary" type="button" onclick="copiarEnlace()">🔗 Copiar enlace</button>
@@ -82,8 +83,7 @@ let resumenQR="";
 const $=id=>document.getElementById(id);
 function toast(msg){const t=$("toast");t.textContent=msg;t.style.display='block';setTimeout(()=>t.style.display='none',2200)}
 function iniciarDemo(){document.getElementById('demo').scrollIntoView({behavior:'smooth'});setTimeout(()=>$("nom").focus(),500)}
-function generarResumen(){
- const p=Number($('peso').value), t=Number($('talla').value), s=Number($('sueno').value), a=Number($('agua').value);
+function generarResumen(){const p=Number($('peso').value), t=Number($('talla').value), s=Number($('sueno').value), a=Number($('agua').value);
  if(!p||!t||!$('nom').value.trim()||!$('ape').value.trim()||!$('edad').value||!$('hora').value||!$('act').value||!$('emo').value||!$('enfermedad').value||!$('medicamentos').value){toast('⚠️ Completa todos los datos obligatorios');return}
  if($('enfermedad').value==='si'&&!$('condicion').value.trim()){toast('🩺 Indica tu condición de salud para personalizar la orientación');return}
  const imc=p/(t*t);const cond=$('enfermedad').value==='si' ? $('condicion').value.trim() : 'Ninguna declarada';const restr=$('restriccion').value.trim();
@@ -94,13 +94,7 @@ function generarResumen(){
  $('adv').innerHTML='<b>💡 Recomendaciones generales:</b><ul><li>'+x.join('</li><li>')+'</li></ul>';
  $('perfilResultado').innerHTML='<div class="notice"><b>🩺 Perfil de salud:</b> '+cond+' · Medicación habitual: '+($('medicamentos').value==='si'?'Sí':'No')+(restr?' · Consideración registrada: '+restr:'')+'</div>';
  resumenQR=`SALUDIA360 — RESUMEN DE SALUD\nPaciente: ${$('nom').value} ${$('ape').value}\nEdad: ${$('edad').value} años\nIMC: ${imc.toFixed(1)}\nCondición declarada: ${cond}\nMedicamentos habituales: ${$('medicamentos').value==='si'?'Sí':'No'}${restr?'\nConsideración: '+restr:''}\n\n🥗 ALIMENTACIÓN: completar evaluación del pilar para recomendaciones específicas.\n😴 SUEÑO: ${s} horas por noche.\n💚 SALUD EMOCIONAL: ${$('emo').value}.\n🏃 ACTIVIDAD FÍSICA: nivel ${$('act').value}.\n💧 HIDRATACIÓN: ${a} vasos registrados hoy.\n⏰ HORA DE DORMIR: ${$('hora').value}.`;
- $('qrcode').innerHTML='';
-const img=document.createElement('img');
-img.alt='Código QR para abrir Saludia360';
-img.width=240;img.height=240;
-const appUrl=window.location.href.split('#')[0];
-img.src='https://quickchart.io/qr?size=260&margin=2&text='+encodeURIComponent(appUrl);
-img.onerror=()=>{$('qrcode').innerHTML='<div class="notice">⚠️ No se pudo cargar el QR porque no hay conexión a Internet. La aplicación sigue funcionando.</div>'};
+ $('qrcode').innerHTML='';const img=document.createElement('img');img.alt='Código QR para abrir Saludia360';img.width=240;img.height=240;const appUrl=window.location.href.split('#')[0];img.src='https://quickchart.io/qr?size=260&margin=2&text='+encodeURIComponent(appUrl);img.onerror=()=>{$('qrcode').innerHTML='<div class="notice">⚠️ No se pudo cargar el QR porque no hay conexión a Internet. La aplicación sigue funcionando.</div>'};
 $('qrcode').appendChild(img);
 $('appLink').innerHTML='<b>Enlace de Saludia360:</b><br>'+htmlEscape(appUrl);
  $('panel').style.display='block';renderRecordatorios();$('panel').scrollIntoView({behavior:'smooth',block:'start'});toast('✅ Resumen personalizado generado');
